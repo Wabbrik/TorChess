@@ -1,4 +1,7 @@
-﻿namespace TorChess
+﻿using System;
+using System.Drawing;
+
+namespace TorChess
 {
     partial class TorchessForm
     {
@@ -28,22 +31,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(11, 11);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1174, 602);
+            this.panel1.TabIndex = 0;
             // 
             // TorchessForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(883, 448);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ClientSize = new System.Drawing.Size(1297, 658);
+            this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "TorchessForm";
-            this.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.Padding = new System.Windows.Forms.Padding(8);
             this.Text = "Torchess";
             this.ResumeLayout(false);
 
         }
-
         #endregion
+
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

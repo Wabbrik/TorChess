@@ -9,6 +9,21 @@ namespace TorChess
     class Board
     {
         public Piece[,] board = new Piece[8, 16];
+        public Board()
+        {
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Column = 0; Column < 16; Column++)
+                {
+                    board[Row, Column] = null;
+                }
+            }
+
+            // Black pieces
+
+            // White pieces
+            
+        }
         public bool IsInCheck(char color)
         {
             // find KingPiece

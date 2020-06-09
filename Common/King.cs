@@ -21,14 +21,11 @@ namespace TorChess.Common
                 {
                     if ((wrapRow(SrcRow + i) == DestRow) && (wrapCol(SrcCol + j) == DestCol))
                     {
-                        if (board[DestRow, DestCol] != null)
-                        {
-                            return false;
-                        }
+                        return true;
                     }
                 }
             }
-            return true;
+            return false;
         }
     }
 }
