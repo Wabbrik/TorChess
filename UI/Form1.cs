@@ -34,6 +34,7 @@ namespace TorChess
                     pictureGrid[Row, Col].Location = new Point(Col * width, Row * height);
                     pictureGrid[Row, Col].MouseEnter += Picture_Box_MouseEnter;
                     pictureGrid[Row, Col].MouseLeave += Picture_Box_MouseLeave;
+                    pictureGrid[Row, Col].MouseHover += Picture_Box_MouseHover;
                     pictureGrid[Row, Col].SizeMode = PictureBoxSizeMode.Zoom;
                     if ((Col + Row) % 2 == 0)
                     {
@@ -118,6 +119,33 @@ namespace TorChess
             }
 
         }
+
+        private void Picture_Box_MouseHover(object sender, EventArgs e)
+        {
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Col = 0; Col < 16; Col++)
+                {
+                    pictureGrid[Row, Col].BackColor = (Color)pictureGrid[Row, Col].Tag;
+                }
+            }
+                    int Colx = panel1.PointToClient(Cursor.Position).X / (panel1.Width / 16);
+            int Rowy = panel1.PointToClient(Cursor.Position).Y / (panel1.Height / 8);
+            if (myBoard.board[Rowy, Colx] != null)
+            {
+                for (int Row = 0; Row < 8; Row++)
+                {
+                    for (int Col = 0; Col < 16; Col++)
+                    {
+                        if(myBoard.board[Rowy, Colx].IsLegalMove(Rowy,Colx,Row, Col, myBoard.board))
+                        {
+                            pictureGrid[Row, Col].BackColor = Color.OrangeRed;
+                        }
+                    }
+                }
+            }
+        }
+
         private void Picture_Box_MouseLeave(object sender, EventArgs e)
         {
             PictureBox hoveredPicture = (PictureBox)sender;
