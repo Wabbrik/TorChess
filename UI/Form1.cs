@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace TorChess
                     pictureGrid[Row, Col].Location = new Point(Col * width, Row * height);
                     pictureGrid[Row, Col].MouseEnter += Picture_Box_MouseEnter;
                     pictureGrid[Row, Col].MouseLeave += Picture_Box_MouseLeave;
+                    pictureGrid[Row, Col].SizeMode = PictureBoxSizeMode.Zoom;
                     if ((Col + Row) % 2 == 0)
                     {
                         pictureGrid[Row, Col].BackColor = Color.DarkGreen;
@@ -45,6 +47,75 @@ namespace TorChess
                     panel1.Controls.Add(pictureGrid[Row, Col]);
                 }
             }
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Col = 0; Col < 16; Col++)
+                {
+                    if (myBoard.board[Row, Col] != null)
+                    {
+                        if (myBoard.board[Row, Col].color == 'w')
+                        {
+                            switch (myBoard.board[Row, Col].GetPiece())
+                            {
+                                case 'I':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_p.png")));
+                                    break;
+                                case 'O':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_p.png")));
+                                    break;
+                                case 'Q':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_q.png")));
+                                    break;
+                                case 'B':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_b.png")));
+                                    break;
+                                case 'K':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_k.png")));
+                                    break;
+                                case 'N':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_n.png")));
+                                    break;
+                                case 'R':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_r.png")));
+                                    break;
+                                case 'G':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_g.png")));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (myBoard.board[Row, Col].GetPiece())
+                            {
+                                case 'I':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_p.png")));
+                                    break;
+                                case 'O':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_p.png")));
+                                    break;
+                                case 'Q':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_q.png")));
+                                    break;
+                                case 'B':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_b.png")));
+                                    break;
+                                case 'K':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_k.png")));
+                                    break;
+                                case 'N':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_n.png")));
+                                    break;
+                                case 'R':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_r.png")));
+                                    break;
+                                case 'G':
+                                    pictureGrid[Row, Col].Image = Image.FromFile(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_g.png")));
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
 
         }
         private void Picture_Box_MouseLeave(object sender, EventArgs e)
@@ -55,7 +126,7 @@ namespace TorChess
         private void Picture_Box_MouseEnter(object sender, EventArgs e)
         {
             PictureBox hoveredPicture = (PictureBox)sender;
-            hoveredPicture.BackColor = Color.LightGoldenrodYellow;
+            hoveredPicture.BackColor = Color.Red;
         }
     }
 }
