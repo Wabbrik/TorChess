@@ -35,11 +35,11 @@ namespace TorChess
                     pictureGrid[Row, Col].MouseLeave += Picture_Box_MouseLeave;
                     if ((Col + Row) % 2 == 0)
                     {
-                        pictureGrid[Row, Col].BackColor = Color.Black;
+                        pictureGrid[Row, Col].BackColor = Color.DarkGreen;
                     }
                     else
                     {
-                        pictureGrid[Row, Col].BackColor = Color.White;
+                        pictureGrid[Row, Col].BackColor = Color.Honeydew;
                     }
                     pictureGrid[Row, Col].Tag = pictureGrid[Row, Col].BackColor;
                     panel1.Controls.Add(pictureGrid[Row, Col]);
@@ -55,7 +55,7 @@ namespace TorChess
         private void Picture_Box_MouseEnter(object sender, EventArgs e)
         {
             PictureBox hoveredPicture = (PictureBox)sender;
-            hoveredPicture.BackColor = Color.LightGreen;
+            hoveredPicture.BackColor = Color.LightGoldenrodYellow;
         }
     }
 }
