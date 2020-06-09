@@ -31,7 +31,7 @@ namespace TorChess.Common
                         // change direction
                         RowOffset *= -1;
                         ColOffset *= -1;
-                        for (CheckRow = SrcRow + RowOffset, CheckCol = SrcCol + ColOffset;
+                        for (CheckRow = wrapRow(SrcRow + RowOffset), CheckCol = wrapCol(SrcCol + ColOffset);
                             CheckRow != DestRow;
                             CheckRow = wrapRow(CheckRow + RowOffset), CheckCol = wrapCol(CheckCol + ColOffset))
                         {
@@ -40,6 +40,7 @@ namespace TorChess.Common
                                 return false;
                             }
                         }
+                        return true;
                     }
                 }
                 return true;

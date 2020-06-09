@@ -30,6 +30,7 @@ namespace TorChess
             {
                 board[Row, 13] = new InnerPawn('b');
             }
+            
             //black pieces
             board[0, 11] = new Rook('b');
             board[0, 12] = new Rook('b');

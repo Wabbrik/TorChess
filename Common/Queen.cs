@@ -14,18 +14,19 @@ namespace TorChess.Common
             if (SrcRow == DestRow)
             {
                 int ColOffset = (DestCol - SrcCol > 0) ? 1 : -1;
-                for (int CheckCol = SrcCol + ColOffset; CheckCol != DestCol; CheckCol = wrapCol(CheckCol + ColOffset))
+                for (int CheckCol = wrapCol(SrcCol + ColOffset); CheckCol != DestCol; CheckCol = wrapCol(CheckCol + ColOffset))
                 {
                     if (board[SrcRow, CheckCol] != null)
                     {
                         ColOffset *= -1;
-                        for (CheckCol = SrcCol + ColOffset; CheckCol != DestCol; CheckCol = wrapCol(CheckCol + ColOffset))
+                        for (CheckCol = wrapCol(SrcCol + ColOffset); CheckCol != DestCol; CheckCol = wrapCol(CheckCol + ColOffset))
                         {
                             if (board[SrcRow, CheckCol] != null)
                             {
                                 return false;
                             }
                         }
+                        return true;
                     }
                 }
                 return true;
@@ -33,18 +34,19 @@ namespace TorChess.Common
             else if (DestCol == SrcCol)
             {
                 int RowOffset = (DestRow - SrcRow > 0) ? 1 : -1;
-                for (int CheckRow = SrcRow + RowOffset; CheckRow != DestRow; CheckRow = wrapRow(CheckRow + RowOffset))
+                for (int CheckRow = wrapRow(SrcRow + RowOffset); CheckRow != DestRow; CheckRow = wrapRow(CheckRow + RowOffset))
                 {
                     if (board[CheckRow, SrcCol] != null)
                     {
                         RowOffset *= -1;
-                        for (CheckRow = SrcRow + RowOffset; CheckRow != DestRow; CheckRow = wrapRow(CheckRow + RowOffset))
+                        for (CheckRow = wrapRow(SrcRow + RowOffset); CheckRow != DestRow; CheckRow = wrapRow(CheckRow + RowOffset))
                         {
                             if (board[CheckRow, SrcCol] != null)
                             {
                                 return false;
                             }
                         }
+                        return true;
                     }
                 }
                 return true;
@@ -63,7 +65,7 @@ namespace TorChess.Common
                         // change direction
                         RowOffset *= -1;
                         ColOffset *= -1;
-                        for (CheckRow = SrcRow + RowOffset, CheckCol = SrcCol + ColOffset;
+                        for (CheckRow = wrapRow(SrcRow + RowOffset), CheckCol = wrapCol(SrcCol + ColOffset);
                             CheckRow != DestRow;
                             CheckRow = wrapRow(CheckRow + RowOffset), CheckCol = wrapCol(CheckCol + ColOffset))
                         {
@@ -72,6 +74,7 @@ namespace TorChess.Common
                                 return false;
                             }
                         }
+                        return true;
                     }
                 }
                 return true;
