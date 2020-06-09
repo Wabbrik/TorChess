@@ -28,7 +28,7 @@ namespace TorChess
             // black outer pawns
             for (int Row = 0; Row < 8; Row++)
             {
-                board[Row, 13] = new InnerPawn('b');
+                board[Row, 13] = new OuterPawn('b');
             }
             
             //black pieces
@@ -61,7 +61,7 @@ namespace TorChess
             // white outer pawns
             for (int Row = 0; Row < 8; Row++)
             {
-                board[Row, 2] = new InnerPawn('w');
+                board[Row, 2] = new OuterPawn('w');
             }
             //white pieces
             board[0, 3] = new Rook('w');
