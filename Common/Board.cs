@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TorChess.Common;
 
 namespace TorChess
 {
-    class Board
+    public class Board
     {
         public Piece[,] board = new Piece[8, 16];
         public Board()
@@ -30,7 +32,8 @@ namespace TorChess
             {
                 board[Row, 13] = new OuterPawn('b');
             }
-            
+
+            board[0, 1] = new Rook('b');
             //black pieces
             board[0, 11] = new Rook('b');
             board[0, 12] = new Rook('b');
@@ -168,5 +171,65 @@ namespace TorChess
             }
             return false;
         }
+        public int GetBoardScore()
+        {
+            int scoreW = 0;
+            int scoreB = 0;
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Column = 0; Column < 16; Column++)
+                {
+                    if (board[Row, Column] != null)
+                    {
+                        if (board[Row, Column].color == 'w') scoreW += board[Row, Column].value;
+                        else scoreB += board[Row, Column].value;
+                    }
+                }
+            }
+            return scoreW - scoreB;
+        }
+        public List<Tuple<Board, int>> BoardValidStates(Board b, char color) 
+        {
+            List<Tuple<Board, int>> validMoves = new List<Tuple<Board, int>>();
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Column = 0; Column < 16; Column++)
+                {
+                    if (b.board[Row, Column] != null)
+                    {
+                        if (b.board[Row, Column].color == color)
+                        {
+                            for (int MoveRow = 0; MoveRow < 8; MoveRow++)
+                            {
+                                for (int MoveColumn = 0; MoveColumn < 16; MoveColumn++)
+                                {
+                                    if (b.board[Row, Column].IsLegalMove(Row, Column, MoveRow, MoveColumn, board))
+                                    {
+                                        Piece bTemp = b.board[MoveRow, MoveColumn];
+                                        b.board[MoveRow, MoveColumn] = b.board[Row, Column];
+                                        b.board[Row, Column] = null;
+                                        bool bCanMove = !IsInCheck(color);
+                                        b.board[Row, Column] = b.board[MoveRow, MoveColumn];
+                                        b.board[MoveRow, MoveColumn] = bTemp;
+                                        if (bCanMove)
+                                        {
+                                            Tuple<Board, int> temp = new Tuple<Board, int>(b, b.GetBoardScore());
+                                            validMoves.Add(temp);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //return validMoves.OrderBy(x => x.GetBoardScore(x)).ToList();
+            return validMoves;
+        }
+        //public int minMaxAb(Board b, int depth, bool white, int alpha = int.MinValue, int beta = int.MaxValue)
+        //{
+        //    if(depth == 0)
+        //    return 1;
+        //}
     }
 }

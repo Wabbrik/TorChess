@@ -8,8 +8,12 @@ namespace TorChess.Common
 {
     class Rook : Piece
     {
-        public Rook(char color) : base(color) => this.color = color;
-        public override char GetPiece()
+        public Rook(char color) : base(color)
+		{
+			this.color = color;
+			value = 7;
+		}
+		public override char GetPiece()
         {
             return 'R';
         }

@@ -13,6 +13,7 @@ namespace TorChess.Common
         {
             this.color = color;
             bigFirst = false;
+            value = 1;
         }
         public override char GetPiece()
         {

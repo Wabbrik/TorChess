@@ -8,7 +8,11 @@ namespace TorChess.Common
 {
     class Queen : Piece
     {
-        public Queen(char color) : base(color) => this.color = color;
+        public Queen(char color) : base(color)
+        {
+            this.color = color;
+            value = 13;
+        }
         public override bool CanMove(int SrcRow, int SrcCol, int DestRow, int DestCol, Piece[,] board)
         {
             if (SrcRow == DestRow)

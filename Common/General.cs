@@ -8,7 +8,11 @@ namespace TorChess.Common
 {
     class General : Piece
     {
-        public General(char color) : base(color) => this.color = color;
+        public General(char color) : base(color)
+        {
+            this.color = color;
+            value = 16;
+        }
         public override char GetPiece()
         {
             return 'G';

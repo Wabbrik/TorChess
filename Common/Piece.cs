@@ -22,6 +22,7 @@ namespace TorChess
 
             return iy;
         }
+        public int value { get; set; }
         public char color { get; set; }
         public abstract bool CanMove(int SrcRow, int SrcCol, int DestRow, int DestCol, Piece[,] board);
         public abstract char GetPiece();

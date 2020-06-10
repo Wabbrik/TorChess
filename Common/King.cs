@@ -8,7 +8,11 @@ namespace TorChess.Common
 {
     class King : Piece
     {
-        public King(char color) : base(color) => this.color = color;
+        public King(char color) : base(color)
+        {
+            this.color = color;
+            value = 32000;
+        }
         public override char GetPiece()
         {
             return 'K';

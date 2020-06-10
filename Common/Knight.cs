@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,7 +9,11 @@ namespace TorChess.Common
 {
     class Knight : Piece
     {
-        public Knight(char color) : base(color) => this.color = color;
+        public Knight(char color) : base(color)
+        {
+            this.color = color;
+            value = 4;
+        }
         public override char GetPiece()
         {
             return 'N';
