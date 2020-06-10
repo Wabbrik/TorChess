@@ -33,7 +33,6 @@ namespace TorChess
                 board[Row, 13] = new OuterPawn('b');
             }
 
-            board[0, 1] = new Rook('b');
             //black pieces
             board[0, 11] = new Rook('b');
             board[0, 12] = new Rook('b');
@@ -127,7 +126,26 @@ namespace TorChess
                     }
                 }
             }
-
+            return false;
+        }
+        public bool isDraw()
+        {
+            if (!this.IsInCheck('w') && !this.BoardCanMove('w'))
+            {
+                return true;
+            }
+            else if (!this.IsInCheck('b') && !this.BoardCanMove('b'))
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool IsMate(char color)
+        {
+            if (this.IsInCheck(color) && !this.BoardCanMove(color))
+            {
+                return true;
+            }
             return false;
         }
         public bool BoardCanMove(char color)
@@ -149,9 +167,7 @@ namespace TorChess
                                     if (board[Row, Column].IsLegalMove(Row, Column, MoveRow, MoveColumn, board))
                                     {
                                         // make the move, after that, check if the KingPiece is in check
-
                                         Piece bTemp = board[MoveRow, MoveColumn];
-
                                         board[MoveRow, MoveColumn] = board[Row, Column];
                                         board[Row, Column] = null;
                                         bool bCanMove = !IsInCheck(color); // check if the KingPiece is in check after the move

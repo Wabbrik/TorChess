@@ -55,6 +55,7 @@
     <Compile Include="Common\OuterPawn.cs" />
     <Compile Include="Common\Queen.cs" />
     <Compile Include="Common\Rook.cs" />
+    <Compile Include="Game\Game.cs" />
     <Compile Include="UI\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,7 +91,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Game\" />
     <Folder Include="Network\" />
     <Folder Include="Tests\" />
   </ItemGroup>
