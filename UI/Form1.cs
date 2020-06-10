@@ -47,12 +47,145 @@ namespace TorChess
 
         static Board myBoard = new Board();
         public PictureBox[,] pictureGrid = new PictureBox[8, 16];
+        private char playerTurn;
         public TorchessForm()
         {
             InitializeComponent();
             PopulatePictureGrid();
             DrawBoard(myBoard);
+            playerTurn = 'w';
         }
+
+        public char getPlayerTurn()
+        {
+            return playerTurn;
+        }
+        public bool isMate(Board myBoard,char color)
+        {
+            //find the king
+            int RowKing = 0, ColKing = 0;
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Col = 0; Col < 16; Col++)
+                {
+                    if (myBoard.board[Row, Col] != null)
+                    {
+                        if (myBoard.board[Row, Col].GetPiece() == 'K')
+                        {
+                            if (myBoard.board[Row, Col].color == color)
+                            {
+                                RowKing = Row;
+                                ColKing = Col;
+                            }
+                        }
+                    }
+                }
+            } 
+            //check if king has 
+            int kingValidMovesCounter = 0;
+            bool canCaptureAttackingPieceAndNotBeInCheck = false;
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Col = 0; Col < 16; Col++)
+                {
+                    if (myBoard.board[RowKing,ColKing].IsLegalMove(RowKing, ColKing, Row, Col, myBoard.board))
+                    {
+                        // make the move, after that, check if the KingPiece is in check
+
+                        Piece bTemp = myBoard.board[Row, Col];
+
+                        myBoard.board[Row, Col] = myBoard.board[RowKing, ColKing];
+                        myBoard.board[RowKing,ColKing] = null;
+                        if (!myBoard.IsInCheck(color))
+                        {
+                            kingValidMovesCounter++;
+                        }// check if the KingPiece is in check after the move
+                                                          
+                        // redo move
+                        myBoard.board[RowKing, ColKing] = myBoard.board[Row, Col];
+                        myBoard.board[Row, Col] = bTemp;
+                        
+                    }
+                }
+            }
+            ///find the pieces that put the king in check
+            List<Tuple<int, int>> attackingPiecesCoordinates=new List<Tuple<int,int>>();
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for (int Col = 0; Col < 16; Col++)
+                {
+                    if (myBoard.board[Row, Col] != null)
+                    {
+                        if (myBoard.board[Row, Col].color != color)
+                        {
+                            if (myBoard.board[Row, Col].IsLegalMove(Row, Col, RowKing, ColKing, myBoard.board))
+                            {
+                                Tuple<int, int> attackingPieceCoordinates = new Tuple<int, int>(Row, Col);
+                                attackingPiecesCoordinates.Add(attackingPieceCoordinates);
+                            }
+                        }
+                    }
+                }
+            }
+            //check if you can capture a piece that puts the king in check and then not be in check anymore
+            for (int Row = 0; Row < 8; Row++)
+            {
+                for(int Col = 0; Col < 16; Col++)
+                {
+                    foreach (Tuple<int,int> attackingPiece in attackingPiecesCoordinates)
+                    {
+                        if (myBoard.board[Row, Col] != null)
+                        {
+                            if (myBoard.board[Row, Col].color == color)
+                            {
+                                if (myBoard.board[Row, Col].IsLegalMove(Row, Col, attackingPiece.Item1, attackingPiece.Item2, myBoard.board))
+                                {
+                                    // make the move, after that, check if the KingPiece is in check
+
+                                    Piece bTemp = myBoard.board[attackingPiece.Item1, attackingPiece.Item2];
+
+                                    myBoard.board[attackingPiece.Item1,attackingPiece.Item2 ] = myBoard.board[Row, Col];
+                                    myBoard.board[Row, Col] = null;
+                                    if (!myBoard.IsInCheck(color))
+                                    {
+                                        canCaptureAttackingPieceAndNotBeInCheck = true;
+                                    }// check if the KingPiece is in check after the move
+
+                                    // redo move
+                                    myBoard.board[Row, Col] = myBoard.board[attackingPiece.Item1, attackingPiece.Item2];
+                                    myBoard.board[attackingPiece.Item1,attackingPiece.Item2] = bTemp;
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (kingValidMovesCounter == 0 && canCaptureAttackingPieceAndNotBeInCheck==false)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool isTie(Board myBoard) 
+        { 
+            if (!myBoard.IsInCheck('w') && !myBoard.BoardCanMove('w'))
+            {
+                return true;
+            }
+            else if(!myBoard.IsInCheck('b') && !myBoard.BoardCanMove('b'))
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+
+
+
+
         private void PopulatePictureGrid()
         {
             for (int Row = 0; Row < 8; Row++)
