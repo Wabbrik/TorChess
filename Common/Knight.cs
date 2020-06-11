@@ -12,7 +12,7 @@ namespace TorChess.Common
         public Knight(char color) : base(color)
         {
             this.color = color;
-            value = 4;
+            value = 3;
         }
         public override char GetPiece()
         {

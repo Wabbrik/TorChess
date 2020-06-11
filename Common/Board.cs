@@ -128,7 +128,7 @@ namespace TorChess
             }
             return false;
         }
-        public bool isDraw()
+        public bool IsDraw()
         {
             if (!this.IsInCheck('w') && !this.BoardCanMove('w'))
             {
@@ -189,6 +189,9 @@ namespace TorChess
         }
         public int GetBoardScore()
         {
+            if (IsMate('b')) return int.MinValue;
+            if (IsMate('w')) return int.MaxValue;
+            if (IsDraw()) return 0;
             int scoreW = 0;
             int scoreB = 0;
             for (int Row = 0; Row < 8; Row++)
@@ -238,10 +241,8 @@ namespace TorChess
                     }
                 }
             }
-            //return validMoves.OrderBy(x => x.GetBoardScore(x)).ToList();
             return validMoves;
         }
-
         private Board Clone()
         {
             Board clonedBoard = new Board();
@@ -249,19 +250,27 @@ namespace TorChess
             return clonedBoard;
         }
 
-        public int BestMove(Board g, int depth, bool maximizingPlayer, int alpha = int.MinValue, int beta = int.MaxValue)
+        public int MiniMax(Board g, int depth, bool maximizingPlayer, int alpha = int.MinValue, int beta = int.MaxValue)
         {
             char player = (maximizingPlayer == true) ? 'w' : 'b';
 
-            if (depth == 0 || g.IsMate(player))
+            if (depth == 0)
+                return g.GetBoardScore();
+
+            if (g.IsMate(player))
+                return g.GetBoardScore();
+
+            var validMoves = g.BoardValidStates(g, player);
+
+            if(validMoves.Count == 0)
                 return g.GetBoardScore();
 
             if (maximizingPlayer)
             {
                 int maxEval = int.MinValue;
-                foreach (var b in g.BoardValidStates(g, player))
+                foreach (var b in validMoves)
                 {
-                    int eval = BestMove(b, depth - 1, false, alpha, beta);
+                    int eval = MiniMax(b, depth - 1, false, alpha, beta);
                     maxEval = Math.Max(maxEval, eval);
                     alpha = Math.Max(alpha, eval);
                     if (beta <= alpha) break;
@@ -270,10 +279,10 @@ namespace TorChess
             }
             else
             {
-                int minEval = int.MinValue;
-                foreach (var b in g.BoardValidStates(g, player))
+                int minEval = int.MaxValue;
+                foreach (var b in validMoves)
                 {
-                    int eval = BestMove(b, depth - 1, true, alpha, beta);
+                    int eval = MiniMax(b, depth - 1, true, alpha, beta);
                     minEval = Math.Min(minEval, eval);
                     alpha = Math.Min(beta, eval);
                     if (beta <= alpha) break;

@@ -11,7 +11,7 @@ namespace TorChess.Common
         public Rook(char color) : base(color)
 		{
 			this.color = color;
-			value = 7;
+			value = 5;
 		}
 		public override char GetPiece()
         {

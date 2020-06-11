@@ -12,7 +12,7 @@ namespace TorChess.Common
         public Bishop(char color) : base(color)
         {
             this.color = color;
-            value = 5;
+            value = 4;
         }
         public override char GetPiece()
         {

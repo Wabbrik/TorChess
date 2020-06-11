@@ -11,7 +11,7 @@ namespace TorChess.Common
         public Queen(char color) : base(color)
         {
             this.color = color;
-            value = 13;
+            value = 9;
         }
         public override bool CanMove(int SrcRow, int SrcCol, int DestRow, int DestCol, Piece[,] board)
         {

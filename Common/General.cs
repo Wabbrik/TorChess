@@ -11,7 +11,7 @@ namespace TorChess.Common
         public General(char color) : base(color)
         {
             this.color = color;
-            value = 16;
+            value = 20;
         }
         public override char GetPiece()
         {

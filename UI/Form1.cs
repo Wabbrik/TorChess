@@ -47,7 +47,6 @@ namespace TorChess
 
         static Game myGame = new Game();
         public PictureBox[,] pictureGrid = new PictureBox[8, 16];
-        System.Threading.Thread gameThread;
         public TorchessForm()
         {
             InitializeComponent();
@@ -96,6 +95,7 @@ namespace TorChess
                 newX = panel1.PointToClient(Cursor.Position).X / (panel1.Width >> 4);
                 newY = panel1.PointToClient(Cursor.Position).Y / (panel1.Height >> 3);
                 if (myGame.playerTurn == 'w')
+                {
                     if (myGame.MakeMove(currentY, currentX, newY, newX))
                     {
                         pictureGrid[newY, newX].Image = pictureGrid[currentY, currentX].Image;
@@ -105,20 +105,24 @@ namespace TorChess
                             MessageBox.Show("Ai castigat!");
                         }
                     }
-
-                int minScore = int.MaxValue;    //minValue pt alb
-                foreach (var b in myGame.board.BoardValidStates(myGame.board, myGame.GetPlayerTurn()))
-                {
-                    int minimaxScore = b.BestMove(b, 2, false);
-                    if (minimaxScore < minScore)
-                    {
-                        minScore = minimaxScore;
-                        myGame.board = b;
-                    }
+                    clearColors(sender);
+                    this.Refresh();
                 }
-                DrawBoard(myGame.board);
-                myGame.AlternateTurn();
-
+                if (myGame.playerTurn == 'b')
+                {
+                    int minScore = int.MaxValue;    //minValue pt alb
+                    foreach (var b in myGame.board.BoardValidStates(myGame.board, myGame.GetPlayerTurn()))
+                    {
+                        int minimaxScore = b.MiniMax(b, 2, false);
+                        if (minimaxScore < minScore)
+                        {
+                            minScore = minimaxScore;
+                            myGame.board = b;
+                        }
+                    }
+                    DrawBoard(myGame.board);
+                    myGame.AlternateTurn();
+                }
             }
 
 
@@ -134,7 +138,6 @@ namespace TorChess
         }
         private void Picture_Box_MouseHover(object sender, EventArgs e)
         {
-            PictureBox hoveredPicture = (PictureBox)sender;
             int Colx = panel1.PointToClient(Cursor.Position).X / (panel1.Width >> 4);
             int Rowy = panel1.PointToClient(Cursor.Position).Y / (panel1.Height >> 3);
             if (myGame.board.board[Rowy, Colx] != null)
@@ -143,20 +146,29 @@ namespace TorChess
                 {
                     for (int Col = 0; Col < 16; Col++)
                     {
-                        if (!myGame.board.board[Rowy, Colx].IsLegalMove(Rowy, Colx, Row, Col, myGame.board.board) ||
-                            myGame.board.board[Rowy, Colx].color != myGame.GetPlayerTurn())
+                        if (myGame.board.board[Rowy, Colx].IsLegalMove(Rowy, Colx, Row, Col, myGame.board.board) &&
+                            myGame.board.board[Rowy, Colx].color == myGame.GetPlayerTurn())
                         {
-                            continue;
+                            if (pictureGrid[Row, Col].Image == null)
+                                pictureGrid[Row, Col].BackColor = Color.CornflowerBlue;
+                            else
+                                pictureGrid[Row, Col].BackColor = Color.DarkBlue;
                         }
-                        if (pictureGrid[Row, Col].Image == null)
-                            pictureGrid[Row, Col].BackColor = Color.CornflowerBlue;
-                        else
-                            pictureGrid[Row, Col].BackColor = Color.DarkBlue;
                     }
                 }
             }
         }
         private void Picture_Box_MouseLeave(object sender, EventArgs e)
+        {
+            clearColors(sender);
+        }
+        private void Picture_Box_MouseEnter(object sender, EventArgs e)
+        {
+            PictureBox hoveredPicture = (PictureBox)sender;
+            if (hoveredPicture.Image == null)
+                hoveredPicture.BackColor = Color.CornflowerBlue;
+        }
+        private void clearColors(object sender)
         {
             PictureBox hoveredPicture = (PictureBox)sender;
 
@@ -166,18 +178,12 @@ namespace TorChess
                 {
                     for (int Col = 0; Col < 16; Col++)
                     {
-                        if (pictureGrid[Row, Col].BackColor != (Color)pictureGrid[Row, Col].Tag)    //optimized
+                        if (pictureGrid[Row, Col].BackColor != (Color)pictureGrid[Row, Col].Tag)
                             pictureGrid[Row, Col].BackColor = (Color)pictureGrid[Row, Col].Tag;
                     }
                 }
             }
             hoveredPicture.BackColor = (Color)hoveredPicture.Tag;
-        }
-        private void Picture_Box_MouseEnter(object sender, EventArgs e)
-        {
-            PictureBox hoveredPicture = (PictureBox)sender;
-            if (hoveredPicture.Image == null)
-                hoveredPicture.BackColor = Color.CornflowerBlue;
         }
         public void DrawBoard(Board myBoard)
         {
