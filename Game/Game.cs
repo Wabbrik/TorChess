@@ -9,7 +9,7 @@ namespace TorChess
 {
     class Game
     {
-        private char playerTurn;
+        public char playerTurn;
         public Board board = new Board();
         public Game()
         {

@@ -47,12 +47,15 @@ namespace TorChess
 
         static Game myGame = new Game();
         public PictureBox[,] pictureGrid = new PictureBox[8, 16];
+        System.Threading.Thread gameThread;
         public TorchessForm()
         {
             InitializeComponent();
             PopulatePictureGrid();
             DrawBoard(myGame.board);
         }
+
+
         private void PopulatePictureGrid()
         {
             for (int Row = 0; Row < 8; Row++)
@@ -83,24 +86,30 @@ namespace TorChess
                 }
             }
         }
+
+
         public static int newX, newY;
         private void Picture_Box_MouseUp(object sender, MouseEventArgs e)
         {
-            newX = panel1.PointToClient(Cursor.Position).X / (panel1.Width >> 4);
-            newY = panel1.PointToClient(Cursor.Position).Y / (panel1.Height >> 3);
-            if (myGame.MakeMove(currentY, currentX, newY, newX))
+            if (myGame.playerTurn != 'b')
             {
-                pictureGrid[newY, newX].Image = pictureGrid[currentY, currentX].Image;
-                pictureGrid[currentY, currentX].Image = null;
-                if (myGame.board.IsMate(myGame.GetPlayerTurn()))
-                {
-                    MessageBox.Show("Ai castigat!");
-                }
-                //ai
+                newX = panel1.PointToClient(Cursor.Position).X / (panel1.Width >> 4);
+                newY = panel1.PointToClient(Cursor.Position).Y / (panel1.Height >> 3);
+                if (myGame.playerTurn == 'w')
+                    if (myGame.MakeMove(currentY, currentX, newY, newX))
+                    {
+                        pictureGrid[newY, newX].Image = pictureGrid[currentY, currentX].Image;
+                        pictureGrid[currentY, currentX].Image = null;
+                        if (myGame.board.IsMate(myGame.GetPlayerTurn()))
+                        {
+                            MessageBox.Show("Ai castigat!");
+                        }
+                    }
+
                 int minScore = int.MaxValue;    //minValue pt alb
                 foreach (var b in myGame.board.BoardValidStates(myGame.board, myGame.GetPlayerTurn()))
                 {
-                    int minimaxScore = b.BestMove(b, 2, false, int.MinValue, int.MaxValue);
+                    int minimaxScore = b.BestMove(b, 2, false);
                     if (minimaxScore < minScore)
                     {
                         minScore = minimaxScore;
@@ -108,13 +117,20 @@ namespace TorChess
                     }
                 }
                 DrawBoard(myGame.board);
+                myGame.AlternateTurn();
+
             }
+
+
         }
         public static int currentX, currentY;
         private void Picture_Box_MouseDown(object sender, MouseEventArgs e)
         {
-            currentX = panel1.PointToClient(Cursor.Position).X / (panel1.Width >> 4);
-            currentY = panel1.PointToClient(Cursor.Position).Y / (panel1.Height >> 3);
+            if (myGame.playerTurn != 'b')
+            {
+                currentX = panel1.PointToClient(Cursor.Position).X / (panel1.Width >> 4);
+                currentY = panel1.PointToClient(Cursor.Position).Y / (panel1.Height >> 3);
+            }
         }
         private void Picture_Box_MouseHover(object sender, EventArgs e)
         {

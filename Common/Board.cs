@@ -226,15 +226,11 @@ namespace TorChess
                                         b.board[Row, Column] = null;
                                         if (!IsInCheck(color))
                                         {
-                                            validMoves.Add(b);
-                                            b.board[Row, Column] = b.board[MoveRow, MoveColumn];
-                                            b.board[MoveRow, MoveColumn] = bTemp;
+                                            Board cB = b.Clone();
+                                            validMoves.Add(cB);
                                         }
-                                        else
-                                        {
-                                            b.board[Row, Column] = b.board[MoveRow, MoveColumn];
-                                            b.board[MoveRow, MoveColumn] = bTemp;
-                                        }
+                                        b.board[Row, Column] = b.board[MoveRow, MoveColumn];
+                                        b.board[MoveRow, MoveColumn] = bTemp;
                                     }
                                 }
                             }
@@ -245,6 +241,14 @@ namespace TorChess
             //return validMoves.OrderBy(x => x.GetBoardScore(x)).ToList();
             return validMoves;
         }
+
+        private Board Clone()
+        {
+            Board clonedBoard = new Board();
+            clonedBoard.board = (Piece[,])this.board.Clone();
+            return clonedBoard;
+        }
+
         public int BestMove(Board g, int depth, bool maximizingPlayer, int alpha = int.MinValue, int beta = int.MaxValue)
         {
             char player = (maximizingPlayer == true) ? 'w' : 'b';
@@ -257,7 +261,7 @@ namespace TorChess
                 int maxEval = int.MinValue;
                 foreach (var b in g.BoardValidStates(g, player))
                 {
-                    int eval = BestMove(b, depth - 1,false, alpha, beta);
+                    int eval = BestMove(b, depth - 1, false, alpha, beta);
                     maxEval = Math.Max(maxEval, eval);
                     alpha = Math.Max(alpha, eval);
                     if (beta <= alpha) break;
