@@ -19,7 +19,7 @@ namespace TorChess
         {
             return playerTurn;
         }
-        private void AlternateTurn() 
+        public void AlternateTurn() 
         {
             playerTurn = (playerTurn == 'w') ? 'b' : 'w';
         } 

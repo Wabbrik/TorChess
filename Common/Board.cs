@@ -204,9 +204,9 @@ namespace TorChess
             }
             return scoreW - scoreB;
         }
-        public List<Tuple<Board, int>> BoardValidStates(Board b, char color) 
+        public List<Board> BoardValidStates(Board b, char color) 
         {
-            List<Tuple<Board, int>> validMoves = new List<Tuple<Board, int>>();
+            List<Board> validMoves = new List<Board>();
             for (int Row = 0; Row < 8; Row++)
             {
                 for (int Column = 0; Column < 16; Column++)
@@ -224,13 +224,16 @@ namespace TorChess
                                         Piece bTemp = b.board[MoveRow, MoveColumn];
                                         b.board[MoveRow, MoveColumn] = b.board[Row, Column];
                                         b.board[Row, Column] = null;
-                                        bool bCanMove = !IsInCheck(color);
-                                        b.board[Row, Column] = b.board[MoveRow, MoveColumn];
-                                        b.board[MoveRow, MoveColumn] = bTemp;
-                                        if (bCanMove)
+                                        if (!IsInCheck(color))
                                         {
-                                            Tuple<Board, int> temp = new Tuple<Board, int>(b, b.GetBoardScore());
-                                            validMoves.Add(temp);
+                                            validMoves.Add(b);
+                                            b.board[Row, Column] = b.board[MoveRow, MoveColumn];
+                                            b.board[MoveRow, MoveColumn] = bTemp;
+                                        }
+                                        else
+                                        {
+                                            b.board[Row, Column] = b.board[MoveRow, MoveColumn];
+                                            b.board[MoveRow, MoveColumn] = bTemp;
                                         }
                                     }
                                 }
@@ -242,10 +245,37 @@ namespace TorChess
             //return validMoves.OrderBy(x => x.GetBoardScore(x)).ToList();
             return validMoves;
         }
-        //public int minMaxAb(Board b, int depth, bool white, int alpha = int.MinValue, int beta = int.MaxValue)
-        //{
-        //    if(depth == 0)
-        //    return 1;
-        //}
+        public int BestMove(Board g, int depth, bool maximizingPlayer, int alpha = int.MinValue, int beta = int.MaxValue)
+        {
+            char player = (maximizingPlayer == true) ? 'w' : 'b';
+
+            if (depth == 0 || g.IsMate(player))
+                return g.GetBoardScore();
+
+            if (maximizingPlayer)
+            {
+                int maxEval = int.MinValue;
+                foreach (var b in g.BoardValidStates(g, player))
+                {
+                    int eval = BestMove(b, depth - 1,false, alpha, beta);
+                    maxEval = Math.Max(maxEval, eval);
+                    alpha = Math.Max(alpha, eval);
+                    if (beta <= alpha) break;
+                }
+                return maxEval;
+            }
+            else
+            {
+                int minEval = int.MinValue;
+                foreach (var b in g.BoardValidStates(g, player))
+                {
+                    int eval = BestMove(b, depth - 1, true, alpha, beta);
+                    minEval = Math.Min(minEval, eval);
+                    alpha = Math.Min(beta, eval);
+                    if (beta <= alpha) break;
+                }
+                return minEval;
+            }
+        }
     }
 }

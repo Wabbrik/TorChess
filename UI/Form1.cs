@@ -88,14 +88,28 @@ namespace TorChess
         {
             newX = panel1.PointToClient(Cursor.Position).X / (panel1.Width >> 4);
             newY = panel1.PointToClient(Cursor.Position).Y / (panel1.Height >> 3);
-            if(myGame.MakeMove(currentY, currentX, newY, newX)) 
+            if (myGame.MakeMove(currentY, currentX, newY, newX))
             {
                 pictureGrid[newY, newX].Image = pictureGrid[currentY, currentX].Image;
                 pictureGrid[currentY, currentX].Image = null;
-                if (myGame.board.IsMate(myGame.GetPlayerTurn())) { MessageBox.Show("Ai castigat!"); }
+                if (myGame.board.IsMate(myGame.GetPlayerTurn()))
+                {
+                    MessageBox.Show("Ai castigat!");
+                }
+                //ai
+                int minScore = int.MaxValue;    //minValue pt alb
+                foreach (var b in myGame.board.BoardValidStates(myGame.board, myGame.GetPlayerTurn()))
+                {
+                    int minimaxScore = b.BestMove(b, 2, false, int.MinValue, int.MaxValue);
+                    if (minimaxScore < minScore)
+                    {
+                        minScore = minimaxScore;
+                        myGame.board = b;
+                    }
+                }
+                DrawBoard(myGame.board);
             }
         }
-
         public static int currentX, currentY;
         private void Picture_Box_MouseDown(object sender, MouseEventArgs e)
         {
@@ -113,7 +127,7 @@ namespace TorChess
                 {
                     for (int Col = 0; Col < 16; Col++)
                     {
-                        if (!myGame.board.board[Rowy, Colx].IsLegalMove(Rowy, Colx, Row, Col, myGame.board.board) || 
+                        if (!myGame.board.board[Rowy, Colx].IsLegalMove(Rowy, Colx, Row, Col, myGame.board.board) ||
                             myGame.board.board[Rowy, Colx].color != myGame.GetPlayerTurn())
                         {
                             continue;
@@ -217,6 +231,10 @@ namespace TorChess
                                     break;
                             }
                         }
+                    }
+                    else
+                    {
+                        pictureGrid[Row, Col].Image = null;
                     }
                 }
             }
