@@ -284,7 +284,7 @@ namespace TorChess
                 {
                     int eval = MiniMax(b, depth - 1, true, alpha, beta);
                     minEval = Math.Min(minEval, eval);
-                    alpha = Math.Min(beta, eval);
+                    beta = Math.Min(beta, eval);
                     if (beta <= alpha) break;
                 }
                 return minEval;

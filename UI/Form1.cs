@@ -113,7 +113,7 @@ namespace TorChess
                     int minScore = int.MaxValue;    //minValue pt alb
                     foreach (var b in myGame.board.BoardValidStates(myGame.board, myGame.GetPlayerTurn()))
                     {
-                        int minimaxScore = b.MiniMax(b, 2, false);
+                        int minimaxScore = b.MiniMax(b, 1, false);
                         if (minimaxScore < minScore)
                         {
                             minScore = minimaxScore;
@@ -124,8 +124,6 @@ namespace TorChess
                     myGame.AlternateTurn();
                 }
             }
-
-
         }
         public static int currentX, currentY;
         private void Picture_Box_MouseDown(object sender, MouseEventArgs e)
