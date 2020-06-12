@@ -11,6 +11,7 @@ namespace TorChess
 {
     public class Board
     {
+        
         public Piece[,] board = new Piece[8, 16];
         public Board()
         {
@@ -249,7 +250,6 @@ namespace TorChess
             clonedBoard.board = (Piece[,])this.board.Clone();
             return clonedBoard;
         }
-
         public int MiniMax(Board g, int depth, bool maximizingPlayer, int alpha = int.MinValue, int beta = int.MaxValue)
         {
             char player = (maximizingPlayer == true) ? 'w' : 'b';

@@ -29,7 +29,7 @@ namespace TorChess
         static string w_n = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\w_n.png"));
         static string b_n = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\src\\b_n.png"));
 
-        //cached pictures
+        // cached pictures
         static Image w_pImage = Image.FromFile(w_p);
         static Image b_pImage = Image.FromFile(b_p);
         static Image w_qImage = Image.FromFile(w_q);
@@ -46,6 +46,7 @@ namespace TorChess
         static Image b_nImage = Image.FromFile(b_n);
 
         static Game myGame = new Game();
+        static int minimaxDepth = 3;
         public PictureBox[,] pictureGrid = new PictureBox[8, 16];
         public TorchessForm()
         {
@@ -105,15 +106,15 @@ namespace TorChess
                             MessageBox.Show("Ai castigat!");
                         }
                     }
-                    clearColors(sender);
+                    ClearColors(sender);
                     this.Refresh();
                 }
                 if (myGame.playerTurn == 'b')
                 {
-                    int minScore = int.MaxValue;    //minValue pt alb
+                    int minScore = int.MaxValue; 
                     foreach (var b in myGame.board.BoardValidStates(myGame.board, myGame.GetPlayerTurn()))
                     {
-                        int minimaxScore = b.MiniMax(b, 1, false);
+                        int minimaxScore = b.MiniMax(b, minimaxDepth, false);
                         if (minimaxScore < minScore)
                         {
                             minScore = minimaxScore;
@@ -158,7 +159,7 @@ namespace TorChess
         }
         private void Picture_Box_MouseLeave(object sender, EventArgs e)
         {
-            clearColors(sender);
+            ClearColors(sender);
         }
         private void Picture_Box_MouseEnter(object sender, EventArgs e)
         {
@@ -166,7 +167,7 @@ namespace TorChess
             if (hoveredPicture.Image == null)
                 hoveredPicture.BackColor = Color.CornflowerBlue;
         }
-        private void clearColors(object sender)
+        private void ClearColors(object sender)
         {
             PictureBox hoveredPicture = (PictureBox)sender;
 
